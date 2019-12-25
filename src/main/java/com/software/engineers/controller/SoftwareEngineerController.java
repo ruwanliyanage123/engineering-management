@@ -4,6 +4,8 @@ import com.software.engineers.exception.SoftwareEngineerNotFoundException;
 import com.software.engineers.model.SoftwareEngineer;
 import com.software.engineers.repository.SoftwareEngineerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +39,14 @@ public class SoftwareEngineerController {
         SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
                 .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s",id)));
         return softwareEngineer;
+    }
+
+    //to delete one engineer
+    @DeleteMapping("/deleteengineer/{id}")
+    public ResponseEntity<?> deleteEngineer(@PathVariable int id){
+        SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
+                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s",id)));
+        softwareEngineerRepository.delete(softwareEngineer);
+        return ResponseEntity.ok().build();
     }
 }
