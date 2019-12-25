@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ public class SoftwareEngineerController {
     @GetMapping("/oneengineer/{id}")
     public SoftwareEngineer getEngineer(@PathVariable int id){
         SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
-                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s",id)));
+                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s not found",id)));
         return softwareEngineer;
     }
 
@@ -45,8 +46,20 @@ public class SoftwareEngineerController {
     @DeleteMapping("/deleteengineer/{id}")
     public ResponseEntity<?> deleteEngineer(@PathVariable int id){
         SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
-                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s",id)));
+                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s not found",id)));
         softwareEngineerRepository.delete(softwareEngineer);
         return ResponseEntity.ok().build();
+    }
+
+    //to update an engineer
+    @PutMapping("/updateengineer/{id}")
+    public SoftwareEngineer updateEngineer(@PathVariable int id, @RequestBody SoftwareEngineer softwareEngineer){
+        SoftwareEngineer softwareEngineer1 = softwareEngineerRepository.findById(id)
+                .orElseThrow(()->new SoftwareEngineerNotFoundException(String.format("%s not found",id)));
+        softwareEngineer1.setFirstName(softwareEngineer.getFirstName());
+        softwareEngineer1.setLastName(softwareEngineer.getLastName());
+        softwareEngineer1.setSalary(softwareEngineer.getSalary());
+        softwareEngineerRepository.save(softwareEngineer1);
+        return softwareEngineer1;
     }
 }
